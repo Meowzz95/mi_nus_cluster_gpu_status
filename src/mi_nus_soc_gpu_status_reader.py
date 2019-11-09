@@ -1,19 +1,26 @@
 import paramiko
 import json
+
+SOC_USERNAME = "mingda"
+PRIVATE_KEY_PATH = paramiko.RSAKey.from_private_key_file("/Users/mimimi/Documents/sshKeys/nus_server_key")
+
 NUS_SERVER_HOSTS = [
     # add more server here
-    'xgpf0',
-    'xgpf1',
-    'xgpf2',
+    # 'xgpf0',
+    # 'xgpf1',
+    # 'xgpf2',
     'xgpf3',
-    'xgpf4',
-    'xgpf5',
-    'xgpf6',
+    # 'xgpf4',
+    # 'xgpf5',
+    # 'xgpf6',
     'xgpf7',
     'xgpf8',
     'xgpf9',
     'xgpf10',
-    'xgpf11'
+    'xgpf11',
+
+    'xgpc8',
+    'xgpc9',
 ]
 
 def print_status_list(host, status_list_obj):
@@ -44,13 +51,13 @@ def print_least_util(status_obj):
 
 
 status_list = []
-key = paramiko.RSAKey.from_private_key_file("/Users/mimimi/Documents/sshKeys/nus_server_key")
+
 for host in NUS_SERVER_HOSTS:
     try:
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        # client.connect(f'{host}.comp.nus.edu.sg', username='mingda', password='PASSWORD_HERE')
-        client.connect(f'{host}.comp.nus.edu.sg', username='mingda', pkey=key)
+        # client.connect(f'{host}.comp.nus.edu.sg', username=SOC_USERNAME, password='PASSWORD_HERE')
+        client.connect(f'{host}.comp.nus.edu.sg', username=SOC_USERNAME, pkey=PRIVATE_KEY_PATH)
         stdin, stdout, stderr = client.exec_command('python3 mi_gpu_slave_script.py')
         for line in stdout:
             status_list_obj = json.loads(line)
