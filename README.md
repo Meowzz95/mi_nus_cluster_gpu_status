@@ -71,3 +71,9 @@ client.connect(f'{host}.comp.nus.edu.sg', username='mingda', password='PASSWORD_
 
 Now run `mi_nus_soc_gpu_status_reader.py`
 :)
+
+
+## TODO
+
+- Multi-thread?
+- CLI args?
