@@ -6,21 +6,59 @@ PRIVATE_KEY_PATH = paramiko.RSAKey.from_private_key_file("/Users/mimimi/Document
 
 NUS_SERVER_HOSTS = [
     # add more server here
-    # 'xgpf0',
-    # 'xgpf1',
-    # 'xgpf2',
+    'xgpb0',
+    'xgpb1',
+    'xgpb2',
+
+
+    
+    'xgpc0',
+    'xgpc1',
+    'xgpc2',
+    'xgpc3',
+    'xgpc4',
+    'xgpc5',
+    'xgpc6',
+    'xgpc7',
+    'xgpc8',
+    'xgpc9',
+    
+    'xgpd0',
+    'xgpd1',
+    'xgpd2',
+    'xgpd3',
+    'xgpd4',
+    'xgpd5',
+    'xgpd6',
+    'xgpd7',
+    'xgpd8',
+    'xgpd9',
+
+    'xgpe0',
+    'xgpe1',
+    'xgpe2',
+    'xgpe3',
+    'xgpe4',
+    'xgpe5',
+    'xgpe6',
+    'xgpe7',
+    'xgpe8',
+    'xgpe9',
+    'xgpe10',
+    'xgpe11',
+
+    'xgpf0',
+    'xgpf1',
+    'xgpf2',
     'xgpf3',
-    # 'xgpf4',
-    # 'xgpf5',
-    # 'xgpf6',
+    'xgpf4',
+    'xgpf5',
+    'xgpf6',
     'xgpf7',
     'xgpf8',
     'xgpf9',
     'xgpf10',
     'xgpf11',
-
-    'xgpc8',
-    'xgpc9',
 ]
 
 def print_status_list(host, status_list_obj):
@@ -51,7 +89,9 @@ def print_least_util(status_obj):
 
 
 status_list = []
-
+processed_counter = 0
+auth_fail_counter = 0
+error_counter = 0
 for host in NUS_SERVER_HOSTS:
     try:
         client = paramiko.SSHClient()
@@ -67,12 +107,19 @@ for host in NUS_SERVER_HOSTS:
                 status_list.append(status_obj)
 
         client.close()
+        processed_counter+=1
     except paramiko.ssh_exception.AuthenticationException as ex:
+        auth_fail_counter+=1
         print(f'Auth fail for {host}, the host may be reserved.')
     except Exception as ex:
+        error_counter+=1
         print(f'Unexpected error for {host} error is {ex}')
 
 if len(status_list)>0:
+    print(f"Host count: {len(NUS_SERVER_HOSTS)}")
+    print(f"Auth fail: {auth_fail_counter} host(s)")
+    print(f"Unexpected error: {error_counter} host(s)")
+    print(f"Processed : {processed_counter} host(s)")
     status_list.sort(key=lambda x:-x['mem_free'])
     print_most_mem_free(status_list[0])
 
