@@ -1,64 +1,8 @@
 # NUS SoC cluster GPU status checker
 
 ## Sample output
-```
-========== xgpf3 ==========
-------- 0 Tesla T4 -------
-Load: 0.0
-Memory Free: 15079.0MB
-Memory Used: 0.0MB / 15079.0MB  0.00%
 
-
-Auth fail for xgpf7, the host may be reserved.
-========== xgpf8 ==========
-------- 0 Tesla T4 -------
-Load: 1.0
-Memory Free: 680.0MB
-Memory Used: 14399.0MB / 15079.0MB  95.49%
-
-
-========== xgpf9 ==========
-------- 0 Tesla T4 -------
-Load: 0.07
-Memory Free: 444.0MB
-Memory Used: 14635.0MB / 15079.0MB  97.06%
-
-
-========== xgpf10 ==========
-------- 0 Tesla T4 -------
-Load: 1.0
-Memory Free: 49.0MB
-Memory Used: 15030.0MB / 15079.0MB  99.68%
-------- 1 Tesla T4 -------
-Load: 1.0
-Memory Free: 6.0MB
-Memory Used: 15073.0MB / 15079.0MB  99.96%
-
-
-========== xgpf11 ==========
-------- 0 Tesla T4 -------
-Load: 0.05
-Memory Free: 265.0MB
-Memory Used: 14814.0MB / 15079.0MB  98.24%
-------- 1 Tesla T4 -------
-Load: 0.43
-Memory Free: 351.0MB
-Memory Used: 14728.0MB / 15079.0MB  97.67%
-
-
-********** Most Free Mem: xgpf3 **********
-------- 0 Tesla T4 -------
-Load: 0.0
-Memory Free: 15079.0MB
-Memory Used: 0.0MB / 15079.0MB  0.00%
-
-
-********** Least Utilization: xgpf3 **********
-------- 0 Tesla T4 -------
-Load: 0.0
-Memory Free: 15079.0MB
-Memory Used: 0.0MB / 15079.0MB  0.00%
-```
+![Sample Output](https://github.com/Meowzz95/mi_nus_cluster_gpu_status/blob/master/images/sample_output.png)
 
 ## Usage
 
