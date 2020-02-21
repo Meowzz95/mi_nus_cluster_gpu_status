@@ -62,17 +62,22 @@ NUS_SERVER_HOSTS = [
 ]
 
 def print_status_list(host, status_list_obj):
-    print("="*10,host,"="*10)
     for status_obj in status_list_obj:
+        status_obj['host'] = host
         print_status(status_obj)
-    print("\n")
 
 def print_status(status_obj):
-    print("-" * 7, status_obj['id'], status_obj['name'], "-" * 7)
-    print(f"Load: {status_obj['load']}")
-    print(f"Memory Free: {status_obj['mem_free']}MB")
-    util = "{0:.2f}".format(float(status_obj['mem_util']) * 100)
-    print(f"Memory Used: {status_obj['mem_used']}MB / {status_obj['mem_total']}MB  {util}%")
+    output = ''
+    output += f'{status_obj["host"]}.comp.nus.edu.sg'.ljust(23)
+    output += str(status_obj['id']).ljust(4)
+    output += str(status_obj['name']).ljust(10)
+    output += format(status_obj['load'] * 100, '.2f').rjust(6)
+    output += format(status_obj['mem_used'], '.0f').rjust(10)
+    output += format(status_obj['mem_free'], '.0f').rjust(10)
+    output += format(status_obj['mem_total'], '.0f').rjust(10)
+    output += format(status_obj['mem_util'] * 100, '.2f').rjust(6)
+
+    print(output)
 
 def print_most_mem_free(status_obj):
     print("*"*10,f"Most Free Mem: {status_obj['host']}","*"*10)
@@ -92,6 +97,17 @@ status_list = []
 processed_counter = 0
 auth_fail_counter = 0
 error_counter = 0
+header = ''
+header += 'Host'.ljust(23)
+header += 'Id'.ljust(4)
+header += 'Name'.ljust(10)
+header += 'Load(%)'.rjust(6)
+header += 'Used(MB)'.rjust(10)
+header += 'Free(MB)'.rjust(10)
+header += 'Total(MB)'.rjust(10)
+header += 'Uti(%)'.rjust(6)
+print(header)
+print('-' * 80)
 for host in NUS_SERVER_HOSTS:
     try:
         client = paramiko.SSHClient()
@@ -103,7 +119,7 @@ for host in NUS_SERVER_HOSTS:
             status_list_obj = json.loads(line)
             print_status_list(host,status_list_obj)
             for status_obj in status_list_obj:
-                status_obj['host']=host
+                # status_obj['host']=host
                 status_list.append(status_obj)
 
         client.close()
