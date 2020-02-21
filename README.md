@@ -80,3 +80,9 @@ Now run `mi_nus_soc_gpu_status_reader.py`
 
 # Please STAR if you find it useful!!!
 Thanks!!!
+
+# Contributor 
+
+@YipingRuan 
+Thanks to him, the output looks a lot nicer now! 🎉
+
