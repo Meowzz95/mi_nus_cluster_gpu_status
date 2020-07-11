@@ -27,6 +27,10 @@ Thanks!!!
 
 # Contributor 
 
-@YipingRuan 
+[@YipingRuan](https://github.com/YipingRuan)
+
 Thanks to him, the output looks a lot nicer now! 🎉
 
+[@lv2020](https://github.com/lv2020)
+
+Thanks to lv2020, the program now executes in a thread pool, much faster!
