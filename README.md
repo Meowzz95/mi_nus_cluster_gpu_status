@@ -19,7 +19,7 @@ Now run `mi_nus_soc_gpu_status_reader.py`
 
 ## TODO
 
-- Multi-thread?
+- ~Multi-thread?~
 - CLI args?
 
 # Please STAR if you find it useful!!!
