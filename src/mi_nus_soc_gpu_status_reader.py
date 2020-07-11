@@ -1,5 +1,7 @@
 import paramiko
 import json
+import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 SOC_USERNAME = "mingda"
 PRIVATE_KEY_PATH = paramiko.RSAKey.from_private_key_file("/Users/mimimi/Documents/sshKeys/nus_server_key")
@@ -9,8 +11,6 @@ NUS_SERVER_HOSTS = [
     'xgpb0',
     'xgpb1',
     'xgpb2',
-
-
     
     'xgpc0',
     'xgpc1',
@@ -59,6 +59,13 @@ NUS_SERVER_HOSTS = [
     'xgpf9',
     'xgpf10',
     'xgpf11',
+
+    'cgpa0',
+    'cgpa1',
+    'cgpa2',
+    'cgpa3',
+
+    'cgpb0'
 ]
 
 def print_status_list(host, status_list_obj):
@@ -89,7 +96,36 @@ def print_least_util(status_obj):
     print_status(status_obj)
     print('\n')
 
+def log_exec(host):
+    '''
+    log in the server and execute the command
+    '''
+    status_list = []
+    processed_counter = 0
+    auth_fail_counter = 0
+    error_counter = 0
+    try:
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        #client.connect(f'{host}.comp.nus.edu.sg', username=SOC_USERNAME, password='xxx')
+        client.connect(f'{host}.comp.nus.edu.sg', username=SOC_USERNAME, pkey=PRIVATE_KEY_PATH)
+        stdin, stdout, stderr = client.exec_command(f'python3 {os.getcwd()}/mi_gpu_slave_script.py')
+        for line in stdout:
+            status_list_obj = json.loads(line)
+            print_status_list(host,status_list_obj)
+            for status_obj in status_list_obj:
+                # status_obj['host']=host
+                status_list.append(status_obj)
 
+        client.close()
+        processed_counter+=1
+    except paramiko.ssh_exception.AuthenticationException as ex:
+        auth_fail_counter+=1
+        print(f'Auth fail for {host}, the host may be reserved.')
+    except Exception as ex:
+        error_counter+=1
+        print(f'Unexpected error for {host} error is {ex}')
+    return [status_list,processed_counter,auth_fail_counter,error_counter]
 
 
 
@@ -108,28 +144,18 @@ header += 'Total(MB)'.rjust(10)
 header += 'Uti(%)'.rjust(6)
 print(header)
 print('-' * 80)
+executor = ThreadPoolExecutor(max_workers=32)
+all_task=[]
 for host in NUS_SERVER_HOSTS:
-    try:
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        # client.connect(f'{host}.comp.nus.edu.sg', username=SOC_USERNAME, password='PASSWORD_HERE')
-        client.connect(f'{host}.comp.nus.edu.sg', username=SOC_USERNAME, pkey=PRIVATE_KEY_PATH)
-        stdin, stdout, stderr = client.exec_command('python3 mi_gpu_slave_script.py')
-        for line in stdout:
-            status_list_obj = json.loads(line)
-            print_status_list(host,status_list_obj)
-            for status_obj in status_list_obj:
-                # status_obj['host']=host
-                status_list.append(status_obj)
+    all_task.append(executor.submit(log_exec,(host)))
 
-        client.close()
-        processed_counter+=1
-    except paramiko.ssh_exception.AuthenticationException as ex:
-        auth_fail_counter+=1
-        print(f'Auth fail for {host}, the host may be reserved.')
-    except Exception as ex:
-        error_counter+=1
-        print(f'Unexpected error for {host} error is {ex}')
+for res in as_completed(all_task):
+    tmp_status_list, tmp_processed_counter, tmp_auth_fail_counter, tmp_error_counter = res.result()
+    status_list+=tmp_status_list
+    processed_counter+=tmp_processed_counter
+    auth_fail_counter+=tmp_auth_fail_counter
+    error_counter+=tmp_error_counter
+    
 
 if len(status_list)>0:
     print(f"Host count: {len(NUS_SERVER_HOSTS)}")
