@@ -6,7 +6,7 @@
 
 ## Usage
 
-1. Upload `mi_gpu_slave_script.py` to your home directory. Upload to one server is enough as the home directory is shared.
+1. Clone the project to one of the SoC servers' home directory. The home directory is shared across the cluster.
 2. Make sure dependencies are installed `pip3 install -r req.txt`
 3. Fill in your private key path in `mi_nus_soc_gpu_status_reader.py` if you are using key pair to authenticate, if not use this line instead(uncomment)
 ```
